@@ -5,12 +5,13 @@ import 'package:topicos_proy/src/Controllers/map_controller.dart';
 
 class MapaGoogle extends StatelessWidget {
   const MapaGoogle({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MapController>(
         create: (_) => MapController(),
-        child: Scaffold(
+        child: Consumer<MapController>(
+          builder: (_, controller, __) => Scaffold(
           appBar: AppBar(
             title: const Center(child: Text('Google Map')),
           ),
@@ -26,26 +27,28 @@ class MapaGoogle extends StatelessWidget {
                     height: 30,
                   ),
                   FloatingActionButton(
-                    heroTag: "idclear",
-                    child: const Icon(Icons.clear_outlined),
-                    onPressed: () {},
+                    heroTag: "current_position",
+                    child: const Icon(Icons.location_on_outlined),
+                    onPressed: () async {
+                      await controller.getCurrentLocation();
+                    },
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   FloatingActionButton(
-                      heroTag: "idPage",
+                      heroTag: "marker",
                     child: const Icon(Icons.add_alert_sharp),
                     onPressed: () {
-                      Navigator.pushNamed(context, "alerta_temprana");
+                      //print(controller.locationSelected);
+                      Navigator.pushNamed(context, "alerta_temprana", arguments: controller.locationSelected);
                     },
                   ),
                 ],
               )
             ],
           ),
-          body: Consumer<MapController>(
-            builder: (_, controller, __) => GoogleMap(
+          body: GoogleMap(
               onMapCreated: controller.onMapCretted,
               myLocationButtonEnabled: true,
               myLocationEnabled: true,

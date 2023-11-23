@@ -8,10 +8,15 @@ class MapController extends ChangeNotifier {
   final Map<MarkerId, Marker> _markers = {};
   final Map<CircleId, Circle> _circles = {};
   late GoogleMapController _mapController;
+  //late LatLng _currentPosition;
+  late LatLng _locationSelected;
 
   GoogleMapController get mapController => _mapController;
   Set<Marker> get markers => _markers.values.toSet();
   Set<Circle> get circles => (_circles.values.toSet());
+  //LatLng get currentPosition => _currentPosition;
+  LatLng get locationSelected => _locationSelected;
+
   MapController() {
     permisoDeUbicacion();
   }
@@ -32,9 +37,21 @@ class MapController extends ChangeNotifier {
     _mapController = controller;
   }
 
-  void onTap(LatLng position) {
-    final markerId = MarkerId('1');
-    final circleId = CircleId('1');
+  getCurrentLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if(!serviceEnabled){
+      return Future.error("Servicio de ubicación desactivado");
+    }
+    Position position = await Geolocator.getCurrentPosition();
+    LatLng currentLocation = LatLng(position.latitude, position.longitude);
+    
+    onTap(currentLocation, key: "marker");
+    notifyListeners();
+  }
+
+  void onTap(LatLng position, {String key = "marker"}) {
+    final markerId = MarkerId(key);
+    final circleId = CircleId(key);
     print(_circles.length);
     // final markerId = MarkerId(_markers.length.toString());
     // final circleId = CircleId(_markers.length.toString());
@@ -49,6 +66,7 @@ class MapController extends ChangeNotifier {
       );
     _circles[circleId] = circle;
     _markers[markerId] = marker;
+    _locationSelected = position;
     notifyListeners();
   }
 

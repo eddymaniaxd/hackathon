@@ -10,9 +10,10 @@ import 'package:topicos_proy/src/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:topicos_proy/src/pages/mapa/googlemap.dart';
 import 'package:topicos_proy/src/pages/profile_screen.dart';
+import 'package:topicos_proy/src/widget/alert_dialog.dart';
 
 class Routes {
-  static const initialRoute = 'map';
+  static const initialRoute = 'alerta_temprana';
   static final Map<String, Widget Function(BuildContext)> routes = {
     'home': (BuildContext context) => HomePage(),
     'login': (BuildContext context) => Login(),
@@ -24,7 +25,8 @@ class Routes {
     'login_pin': (BuildContext context) => const LoginPin(),
     'profile': (BuildContext context) => const ProfileScreen(),
     'lista_reclamos': (BuildContext context) => const ReclamoListView(),
-    'alerta_temprana': (BuildContext context) => const AlertaTemprana()
+    'alerta_temprana': (BuildContext context) => const AlertaTemprana(),
+    'category_notification': (BuildContext context) => const CheckboxAlerta(),
   };
   static final routesName = {
     'home': 'home',

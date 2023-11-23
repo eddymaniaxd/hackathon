@@ -44,46 +44,37 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCyZzew4sYtfBLWeinA3Fp0FgoHg8bPCfw',
-    appId: '1:318837877708:web:ec9197025a620cebab4b69',
-    messagingSenderId: '318837877708',
-    projectId: 'prueba-438c5',
-    authDomain: 'prueba-438c5.firebaseapp.com',
-    databaseURL: 'https://prueba-438c5-default-rtdb.firebaseio.com',
-    storageBucket: 'prueba-438c5.appspot.com',
-    measurementId: 'G-NXKZSQQMY7',
+    apiKey: 'AIzaSyAOgFW0up-wul3gDq5OUZxQVPE-SbqDVwY',
+    appId: '1:1090161770992:web:f26d8fffea903eb7309d35',
+    messagingSenderId: '1090161770992',
+    projectId: 'hackaton-b9205',
+    authDomain: 'hackaton-b9205.firebaseapp.com',
+    storageBucket: 'hackaton-b9205.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-      apiKey: "AIzaSyAalC_6GfGHsbKwlgoO_BOL40EvbGQUzhY",
-      authDomain: "hackathon-f875b.firebaseapp.com",
-      projectId: "hackathon-f875b",
-      storageBucket: "hackathon-f875b.appspot.com",
-      messagingSenderId: "927728274216",
-      appId: "1:927728274216:web:ccda0f211bcabd19799e1d",
-      measurementId: "G-5HFZ6KE0JV");
+    apiKey: 'AIzaSyDqymNbyv2c19wcDX5wXrf9R5GFF-LJrvY',
+    appId: '1:1090161770992:android:3b8884167021162d309d35',
+    messagingSenderId: '1090161770992',
+    projectId: 'hackaton-b9205',
+    storageBucket: 'hackaton-b9205.appspot.com',
+  );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBLTm4r92Cg-hTCLB_nrra5ifpygN2wjlw',
-    appId: '1:318837877708:ios:bf013963d66b49a1ab4b69',
-    messagingSenderId: '318837877708',
-    projectId: 'prueba-438c5',
-    databaseURL: 'https://prueba-438c5-default-rtdb.firebaseio.com',
-    storageBucket: 'prueba-438c5.appspot.com',
-    iosClientId:
-        '318837877708-nmcu7pindilqondlgqdc0m4mfp7j5f0u.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCm_IvhqsEi3b8PJwbLZ-RyrDtj92zzh4E',
+    appId: '1:1090161770992:ios:5af014aaa8ffc820309d35',
+    messagingSenderId: '1090161770992',
+    projectId: 'hackaton-b9205',
+    storageBucket: 'hackaton-b9205.appspot.com',
     iosBundleId: 'com.example.topicosProy',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBLTm4r92Cg-hTCLB_nrra5ifpygN2wjlw',
-    appId: '1:318837877708:ios:bf013963d66b49a1ab4b69',
-    messagingSenderId: '318837877708',
-    projectId: 'prueba-438c5',
-    databaseURL: 'https://prueba-438c5-default-rtdb.firebaseio.com',
-    storageBucket: 'prueba-438c5.appspot.com',
-    iosClientId:
-        '318837877708-nmcu7pindilqondlgqdc0m4mfp7j5f0u.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCm_IvhqsEi3b8PJwbLZ-RyrDtj92zzh4E',
+    appId: '1:1090161770992:ios:5af014aaa8ffc820309d35',
+    messagingSenderId: '1090161770992',
+    projectId: 'hackaton-b9205',
+    storageBucket: 'hackaton-b9205.appspot.com',
     iosBundleId: 'com.example.topicosProy',
   );
 }

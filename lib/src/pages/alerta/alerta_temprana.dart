@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+import 'package:topicos_proy/src/repositories/denuncia_repository.dart';
+import 'package:topicos_proy/src/util/Files.dart';
+import 'package:topicos_proy/src/widget/alert_dialog.dart';
 import 'dart:io'; //MANEJO DE ARCHIVOS
 import 'dart:ui' as ui;
 
@@ -18,11 +21,11 @@ class AlertaTemprana extends StatefulWidget {
 
 class _AlertaTempranaState extends State<AlertaTemprana> {
   //VARIABLES DEFINIDAS
-  final List _images = [];
+  List<File> _images = [];
 
   String _selectCategoria = "0";
 
-  TextEditingController? _descripcionController;
+  TextEditingController? _descripcionController = TextEditingController();
 
   TextEditingController? _tituloController;
 
@@ -30,96 +33,186 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
 
   final picker = ImagePicker();
 
+  DenunciaRepository denunciaRepository = DenunciaRepository();
+  //Files files = Files("denuncias");
+  List<Files> selectedImages = [];
+
   @override
   Widget build(BuildContext context) {
+    var locationSelected = ModalRoute.of(context)!.settings.arguments; //Recover location selected
+    print("Location: ${locationSelected}");
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text('Registrar Alerta Temprana'),
+        appBar: AppBar(
+          title: const Center(
+            child: Text('Registrar Alerta Temprana'),
+          ),
+          elevation: 10,
         ),
-        elevation: 10,
-      ),
-      body: Container(
-        padding: EdgeInsetsDirectional.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Seleccionar Fotografia:'),
-            const SizedBox(
-              height: 30,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        body: Form(
+          key: _formKey,
+          child: Container(
+            padding: const EdgeInsetsDirectional.all(20),
+            child: ListView(
+              //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    //Navigator.pop(context);
-                    choceImageGallery();
-                  },
-                  child: Card(
-                      elevation: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/img/gallery.png',
-                              height: 60,
-                              width: 60,
-                            ),
-                          ],
-                        ),
-                      )),
+                const Text('Seleccionar Fotografia:'),
+                const SizedBox(
+                  height: 30,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    //Navigator.pop(context);
-                    choceImageCamare();
-                  },
-                  child: Card(
-                      elevation: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/img/camera.png',
-                              height: 60,
-                              width: 60,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        //Navigator.pop(context);
+                        choiceImage();
+                      },
+                      child: Card(
+                          elevation: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  'assets/img/gallery.png',
+                                  height: 60,
+                                  width: 60,
+                                ),
+                                const Text("Abrir galeria")
+                              ],
                             ),
-                            const Text('Camera'),
-                          ],
-                        ),
-                      )),
+                          )),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        //Navigator.pop(context);
+                        choiceImageCamera();
+                      },
+                      child: Card(
+                          elevation: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  'assets/img/camera.png',
+                                  height: 60,
+                                  width: 60,
+                                ),
+                                const Text('Abrir Cámara'),
+                              ],
+                            ),
+                          )),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Text('Descripción:'),
+                TextFormField(
+                  controller: _descripcionController,
+                  validator: (value) {
+                    if (value!.isEmpty) return "Campo requerido";
+                    return null;
+                  }
+                ),
+                Card(
+                  
+                  child: Row(
+                    children: const [
+                      Text("Categorías"),
+                      CheckboxAlerta()
+                    ],
+                  )
+
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                _gallery(),
+                const SizedBox(
+                  height: 30,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    //Navigator.pop(context, 'Cancel');
+                    if (_formKey.currentState!.validate() &&
+                        selectedImages.isNotEmpty) {
+                      print(_descripcionController!.value.text);
+                      for (var image in selectedImages) {
+                        print(basename(image.getfile!.path));
+                        print(image.getfile);
+                        print(image.getPath);
+                        // denunciaRepository.uploadDataStorage([
+                        //   {
+                        //     "name_img": basename(files.getfile!.path),
+                        //     "path_img": files.getPath,
+                        //     "file": files.getfile,
+                        //   }
+                        // ]);
+                      }
+                    } else {
+                      Widgets.alertSnackbar(context, "Imagen no seleccionada!");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          10.0), // Ajusta el radio según tus necesidades
+                    ),
+                    minimumSize: const Size(
+                        2000, 50), // Ajusta el tamaño del botón rectangular
+                  ),
+                  child: const Text('Registrar Alerta'),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 30,
-            ),
-            const Text('Descripción:'),
-            TextFormField(),
-            const SizedBox(
-              height: 30,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context, 'Cancel');
-              },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      10.0), // Ajusta el radio según tus necesidades
-                ),
-                minimumSize: const Size(
-                    2000, 50), // Ajusta el tamaño del botón rectangular
-              ),
-              child: const Text('Registrar Alerta'),
-            ),
-          ],
-        ),
-      ),
+          ),
+        ));
+  }
+
+  _gallery() {
+    if (selectedImages == null || selectedImages.isEmpty) {
+      return const Text("");
+    }
+
+    return SizedBox(
+      height: 350.0,
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: selectedImages.length,
+          itemBuilder: (context, index) {
+            return Container(
+              padding: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.green),
+                  borderRadius: const BorderRadius.all(Radius.circular(30.0))),
+              child:
+                  Image.file(selectedImages[index].getfile!, fit: BoxFit.cover),
+            );
+          }),
     );
+  }
+
+  Future choiceImage() async {
+    try {
+      var pickedImage = await picker.pickMultiImage(
+          imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+      setState(() {
+        if (pickedImage == null) return;
+        for (var i = 0; i < pickedImage.length; i++) {
+          var files = Files("denuncias");
+          files.setfile = File(pickedImage[i].path);
+          selectedImages.add(files);
+        }
+        //files.setfile = File(pickedImage.path);
+      });
+    } on Exception {
+      print("Error");
+    }
   }
 
   //METODOS
@@ -168,17 +261,18 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
     }
   }
 
-  choceImageCamare() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      // final String fileName = pickedFile.path.split('/').last;
-      // final urlImage = await reclamoService.uploadDenunciaStorage(
-      //     File(pickedFile.path), fileName);
-      // urlFotos.add(urlImage);
-      // setState(() {
-      //   _imagesPath.add(pickedFile.path);
-      //   _images.add(File(pickedFile.path));
-      // });
+  Future choiceImageCamera() async {
+    try {
+      var pickedImage = await picker.pickImage(source: ImageSource.camera);
+      setState(() {
+        if(pickedImage == null) return;
+        var files = Files("denuncias");
+            files.setfile = File(pickedImage.path);
+            selectedImages.add(files);
+        });
+    } on Exception {
+      print("Error");
     }
   }
+
 }
