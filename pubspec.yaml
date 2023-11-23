@@ -58,6 +58,7 @@ dependencies:
   equatable: ^2.0.5
 dev_dependencies:
   flutter_launcher_icons: ^0.9.3
+  intl: ^0.18.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

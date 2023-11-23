@@ -12,48 +12,43 @@ class MapaGoogle extends StatelessWidget {
         create: (_) => MapController(),
         child: Consumer<MapController>(
           builder: (_, controller, __) => Scaffold(
-            appBar: AppBar(
-              title: const Center(child: Text('Google Map')),
-            ),
-            floatingActionButton: Row(
-              children: [
-                const SizedBox(
-                  width: 30,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    FloatingActionButton(
-                      heroTag: "idclear",
-                      child: const Icon(Icons.clear_outlined),
-                      onPressed: () {
-                        controller.onDeleteMarker();
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    FloatingActionButton(
-                      heroTag: "idPage",
-                      child: const Icon(Icons.add_alert_sharp),
-                      onPressed: () {
-                        if (controller.circles.isNotEmpty ||
-                            controller.markers.isNotEmpty) {
-                          Navigator.pushNamed(context, "alerta_temprana");
-                        } else {
-                          showAlerta(context, "Alerta Warning",
-                              "Debe seleccionar un punto en el mapa.");
-                        }
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
-            body: GoogleMap(
+          appBar: AppBar(
+            title: const Center(child: Text('Google Map')),
+          ),
+          floatingActionButton: Row(
+            children: [
+              const SizedBox(
+                width: 30,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  FloatingActionButton(
+                    heroTag: "current_position",
+                    child: const Icon(Icons.location_on_outlined),
+                    onPressed: () async {
+                      await controller.getCurrentLocation();
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  FloatingActionButton(
+                      heroTag: "marker",
+                    child: const Icon(Icons.add_alert_sharp),
+                    onPressed: () {
+                      //print(controller.locationSelected);
+                      Navigator.pushNamed(context, "alerta_temprana", arguments: controller.locationSelected);
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
+          body: GoogleMap(
               onMapCreated: controller.onMapCretted,
               myLocationButtonEnabled: true,
               myLocationEnabled: true,
