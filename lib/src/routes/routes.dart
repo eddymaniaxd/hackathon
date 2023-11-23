@@ -9,10 +9,11 @@ import 'package:topicos_proy/src/pages/denuncias/nuevo_reclamos.dart';
 import 'package:topicos_proy/src/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:topicos_proy/src/pages/mapa/googlemap.dart';
+import 'package:topicos_proy/src/pages/navigation_bar_home.dart';
 import 'package:topicos_proy/src/pages/profile_screen.dart';
 
 class Routes {
-  static const initialRoute = 'map';
+  static const initialRoute = 'navigation_home';
   static final Map<String, Widget Function(BuildContext)> routes = {
     'home': (BuildContext context) => HomePage(),
     'login': (BuildContext context) => Login(),
@@ -24,7 +25,8 @@ class Routes {
     'login_pin': (BuildContext context) => const LoginPin(),
     'profile': (BuildContext context) => const ProfileScreen(),
     'lista_reclamos': (BuildContext context) => const ReclamoListView(),
-    'alerta_temprana': (BuildContext context) => const AlertaTemprana()
+    'alerta_temprana': (BuildContext context) => const AlertaTemprana(),
+    'navigation_home': (BuildContext content) => const NavigationBarHome()
   };
   static final routesName = {
     'home': 'home',
@@ -37,6 +39,7 @@ class Routes {
     'login_pin': 'login_pin',
     'profile': 'profile',
     'lista_reclamos': 'lista_reclamos',
-    'alerta_temprana': 'alerta_temprana'
+    'alerta_temprana': 'alerta_temprana',
+    'navigation_home': 'navigation_home'
   };
 }

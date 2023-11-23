@@ -27,6 +27,8 @@ class MapController extends ChangeNotifier {
     }
   }
 
+  
+
   void onMapCretted(GoogleMapController controller) {
     controller.setMapStyle(mapStyle);
     _mapController = controller;
@@ -49,6 +51,14 @@ class MapController extends ChangeNotifier {
       );
     _circles[circleId] = circle;
     _markers[markerId] = marker;
+    notifyListeners();
+  }
+
+  void onDeleteMarker()
+  {
+    print('clearing');
+    _circles.clear();
+    _markers.clear();
     notifyListeners();
   }
 

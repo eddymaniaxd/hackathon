@@ -5,47 +5,55 @@ import 'package:topicos_proy/src/Controllers/map_controller.dart';
 
 class MapaGoogle extends StatelessWidget {
   const MapaGoogle({super.key});
-
   @override
   Widget build(BuildContext context) {
+    
     return ChangeNotifierProvider<MapController>(
         create: (_) => MapController(),
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Center(child: Text('Google Map')),
-          ),
-          floatingActionButton: Row(
-            children: [
-              const SizedBox(
-                width: 30,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  FloatingActionButton(
-                    heroTag: "idclear",
-                    child: const Icon(Icons.clear_outlined),
-                    onPressed: () {},
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  FloatingActionButton(
+        child: Consumer<MapController>(
+          builder: (_, controller, __) => Scaffold(
+            appBar: AppBar(
+              title: const Center(child: Text('Google Map')),
+            ),
+            floatingActionButton: Row(
+              children: [
+                const SizedBox(
+                  width: 30,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    FloatingActionButton(
+                      heroTag: "idclear",
+                      child: const Icon(Icons.clear_outlined),
+                      onPressed: () {
+                        controller.onDeleteMarker();
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    FloatingActionButton(
                       heroTag: "idPage",
-                    child: const Icon(Icons.add_alert_sharp),
-                    onPressed: () {
-                      Navigator.pushNamed(context, "alerta_temprana");
-                    },
-                  ),
-                ],
-              )
-            ],
-          ),
-          body: Consumer<MapController>(
-            builder: (_, controller, __) => GoogleMap(
+                      child: const Icon(Icons.add_alert_sharp),
+                      onPressed: () {
+                        if (controller.circles.isNotEmpty ||
+                            controller.markers.isNotEmpty) {
+                          Navigator.pushNamed(context, "alerta_temprana");
+                        } else {
+                          showAlerta(context, "Alerta Warning",
+                              "Debe seleccionar un punto en el mapa.");
+                        }
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
+            body: GoogleMap(
               onMapCreated: controller.onMapCretted,
               myLocationButtonEnabled: true,
               myLocationEnabled: true,
@@ -59,10 +67,6 @@ class MapaGoogle extends StatelessWidget {
         ));
   }
 }
-
-
-
-
 
 class SliderExample extends StatefulWidget {
   const SliderExample({super.key});
@@ -91,6 +95,26 @@ class _SliderExampleState extends State<SliderExample> {
       ),
     );
   }
+}
+
+void showAlerta(BuildContext context, String title, String description) {
+  showDialog<String>(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text(title),
+      content: Text(description),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancel'),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'OK'),
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
 }
 
 // class MapaGoogle extends StatefulWidget {
