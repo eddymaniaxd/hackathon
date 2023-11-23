@@ -1,1 +1,1 @@
-final googleAPIKEY = 'AIzaSyAjQgjL0Jd_sSb0hPL71UZcg13r1biz15c';
+final googleAPIKEY = 'AIzaSyAaoQhNFH0BnbAhKLSZRDHt-e2GV_kvI18';

@@ -92,7 +92,7 @@ class _ReclamoState extends State<Reclamo> {
                           color: Colors.white,
                           child: Container(
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(8),   
                                   color: Colors.white,
                                   image: const DecorationImage(
                                       image: NetworkImage(

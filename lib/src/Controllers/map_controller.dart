@@ -42,10 +42,11 @@ class MapController extends ChangeNotifier {
     final circle = Circle(
         circleId: circleId,
         center: position,
-        radius: 400,
+        radius: 1000,
         strokeWidth: 2,
         strokeColor: Colors.green,
-        fillColor: Colors.green.withAlpha(70));
+        fillColor: Colors.green.withAlpha(70),
+      );
     _circles[circleId] = circle;
     _markers[markerId] = marker;
     notifyListeners();

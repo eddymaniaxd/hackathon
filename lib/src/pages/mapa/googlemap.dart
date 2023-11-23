@@ -14,6 +14,36 @@ class MapaGoogle extends StatelessWidget {
           appBar: AppBar(
             title: const Center(child: Text('Google Map')),
           ),
+          floatingActionButton: Row(
+            children: [
+              const SizedBox(
+                width: 30,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  FloatingActionButton(
+                    heroTag: "idclear",
+                    child: const Icon(Icons.clear_outlined),
+                    onPressed: () {},
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  FloatingActionButton(
+                      heroTag: "idPage",
+                    child: const Icon(Icons.add_alert_sharp),
+                    onPressed: () {
+                      Navigator.pushNamed(context, "alerta_temprana");
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
           body: Consumer<MapController>(
             builder: (_, controller, __) => GoogleMap(
               onMapCreated: controller.onMapCretted,
@@ -27,6 +57,39 @@ class MapaGoogle extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+
+
+
+
+class SliderExample extends StatefulWidget {
+  const SliderExample({super.key});
+
+  @override
+  State<SliderExample> createState() => _SliderExampleState();
+}
+
+class _SliderExampleState extends State<SliderExample> {
+  double _currentSliderValue = 20;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Slider')),
+      body: Slider(
+        value: _currentSliderValue,
+        max: 100,
+        divisions: 5,
+        label: _currentSliderValue.round().toString(),
+        onChanged: (double value) {
+          setState(() {
+            _currentSliderValue = value;
+          });
+        },
+      ),
+    );
   }
 }
 
