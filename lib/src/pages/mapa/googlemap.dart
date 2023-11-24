@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:topicos_proy/src/Controllers/map_controller.dart';
+import 'package:topicos_proy/src/widget/show_dialog.dart';
 import 'package:topicos_proy/src/widget/widgets.dart';
 
 class MapaGoogle extends StatelessWidget {
@@ -31,7 +32,11 @@ class MapaGoogle extends StatelessWidget {
                     heroTag: "current_position",
                     child: const Icon(Icons.location_on_outlined),
                     onPressed: () async {
-                      await controller.getCurrentLocation();
+                      try{
+                        await controller.getCurrentLocation();
+                      }catch(error){
+                        await ShowDialog.showMyDialog(context, "Ubicación", error.toString());
+                      }
                     },
                   ),
                   const SizedBox(
@@ -40,11 +45,11 @@ class MapaGoogle extends StatelessWidget {
                   FloatingActionButton(
                       heroTag: "marker",
                     child: const Icon(Icons.add_alert_sharp),
-                    onPressed: () {
+                    onPressed: () async {
                       //print(controller.locationSelected);
                       if(controller.locationSelected.latitude == 0 &&
                         controller.locationSelected.longitude == 0){
-                        Widgets.alertSnackbar(context, "Seleccione una ubicación");
+                        await ShowDialog.showMyDialog(context, "Ubicación", "Seleccione una ubicación");
                       }else{
                         Navigator.pushNamed(context, "alerta_temprana", arguments: controller.locationSelected);
                       }

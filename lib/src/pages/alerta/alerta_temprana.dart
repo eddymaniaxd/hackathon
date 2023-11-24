@@ -14,8 +14,10 @@ import 'package:topicos_proy/src/widget/alert_dialog.dart';
 import 'dart:io'; //MANEJO DE ARCHIVOS
 import 'dart:ui' as ui;
 import 'package:intl/intl.dart';
+import 'package:topicos_proy/src/widget/show_dialog.dart';
 
 import 'package:topicos_proy/src/widget/widgets.dart';
+import 'package:uuid/uuid.dart';
 
 class AlertaTemprana extends StatefulWidget {
   const AlertaTemprana({super.key});
@@ -146,20 +148,36 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
                   onPressed: () {
                     if (_formKey.currentState!.validate() &&
                         selectedImages.isNotEmpty) {
-                      // Crear el mensaje de notificación
-                      // var data = {
-                      //   "title": "Alerta robo",
-                      //   "body": _descripcionController!.text,
-                      // };
-                      // notificationContext.messaging.sendMessage(
-                      //   to: notificationContext.state.tokens[0],
-                      //   data: data,
-                      //   messageId: "aklsdjflsdf",
-                      //   messageType: 'alerta_robo',
-                      //   collapseKey: 'colapse',
-                      // );
-                     // await _uploadData(locationSelected);
-                      Widgets.alertSnackbar(context, "Denuncia realizada!");
+                        
+                        List<String> urlDenuncias = [];
+
+                        for (var image in selectedImages) {
+                          String currentName = basename(image.getfile!.path);
+                          String currentExtension = extension(currentName);
+                          var uuid = const Uuid();
+
+                          String newName = "${uuid.v4()}$currentExtension";
+                          await denunciaRepository.uploadDataStorage([
+                            {
+                              "name_img": newName,
+                              "path_img": image.getPath,
+                              "file": image.getfile,
+                            }
+                          ]);
+                          urlDenuncias.add("${image.getPath}/$newName");
+                        }
+                        
+                        Denuncia denuncia = Denuncia(
+                          DateFormat('yMd').format(DateTime.now()),
+                          DateFormat('hh: mm: ss aa').format(DateTime.now()),
+                            _descripcionController!.value.text,
+                            locationSelected.latitude,
+                            locationSelected.longitude,
+                          urlDenuncias
+                        );
+                        await denunciaRepository.create(denuncia);
+
+                        await ShowDialog.showMyDialog(context, "Denuncia", "Denuncia realizada!");
                     } else {
                       Widgets.alertSnackbar(context, "Imagen no seleccionada!");
                     }
@@ -184,14 +202,11 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
     List<String> urlDenuncias = [];
 
     for (var image in selectedImages) {
-      // String currentName = basename(image.getfile!.path);
-      // String currentExt = extension(currentName);
+      String currentName = basename(image.getfile!.path);
+      String currentExtension = extension(currentName);
+      var uuid = const Uuid();
 
-      // DateTime now = DateTime.now();
-      // String fechaHora = DateFormat('yyyyMMdd_HHmmss').format(now);
-
-      // String newName = "$fechaHora$currentExt";
-
+      String newName = "${uuid.v4()}$currentExtension";
       await denunciaRepository.uploadDataStorage([
         {
           "name_img": basename(image.getfile!.path),
@@ -206,11 +221,10 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
         DateFormat('yMd').format(DateTime.now()),
         DateFormat('hh: mm: ss aa').format(DateTime.now()),
         _descripcionController!.value.text,
-        latLng.latitude,
-        latLng.longitude,
-        urlDenuncias);
-    print(urlDenuncias);
-    print(denuncia.toJson());
+      latLng.latitude,
+      latLng.longitude,
+      urlDenuncias
+    );
     await denunciaRepository.create(denuncia);
   }
 
