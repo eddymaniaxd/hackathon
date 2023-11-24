@@ -1,4 +1,6 @@
 import 'package:topicos_proy/src/pages/alerta/alerta_temprana.dart';
+import 'package:topicos_proy/src/pages/alertas/alertas_pages.dart';
+import 'package:topicos_proy/src/pages/alertas/historial_pages.dart';
 import 'package:topicos_proy/src/pages/auth/camara.dart';
 import 'package:topicos_proy/src/pages/auth/login_pin.dart';
 import 'package:topicos_proy/src/pages/auth/register.dart';
@@ -26,7 +28,10 @@ class Routes {
     'profile': (BuildContext context) => const ProfileScreen(),
     'lista_reclamos': (BuildContext context) => const ReclamoListView(),
     'alerta_temprana': (BuildContext context) => const AlertaTemprana(),
-    'navigation_home': (BuildContext content) => const NavigationBarHome()
+    'navigation_home': (BuildContext content) => const NavigationBarHome(),
+    'historial': (BuildContext content) => const HistorialPage(),
+    'notificaciones': (BuildContext content) => const AlertasPage(),
+    
   };
   static final routesName = {
     'home': 'home',

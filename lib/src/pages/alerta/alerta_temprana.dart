@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+import 'package:topicos_proy/src/blocs/notifications_bloc/notifications_bloc.dart';
 import 'package:topicos_proy/src/models/denuncia.dart';
 import 'package:topicos_proy/src/repositories/denuncia_repository.dart';
 import 'package:topicos_proy/src/util/Files.dart';
@@ -42,11 +44,15 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
   DenunciaRepository denunciaRepository = DenunciaRepository();
   //Files files = Files("denuncias");
   List<Files> selectedImages = [];
-  CheckboxAlerta checkboxAlerta = CheckboxAlerta(categoryOptions: const [],);
+  CheckboxAlerta checkboxAlerta = CheckboxAlerta(
+    categoryOptions: const [],
+  );
 
   @override
   Widget build(BuildContext context) {
-    LatLng locationSelected = ModalRoute.of(context)!.settings.arguments as LatLng; //Recover location selected
+    final notificationContext = context.watch<NotificationsBloc>();
+    LatLng locationSelected = ModalRoute.of(context)!.settings.arguments
+        as LatLng; //Recover location selected
     print("Location: ${locationSelected}");
 
     return Scaffold(
@@ -118,25 +124,19 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
                 ),
                 const Text('Descripción:'),
                 TextFormField(
-                  controller: _descripcionController,
-                  validator: (value) {
-                    if (value!.isEmpty) return "Campo requerido";
-                    return null;
-                  }
-                ),
+                    controller: _descripcionController,
+                    validator: (value) {
+                      if (value!.isEmpty) return "Campo requerido";
+                      return null;
+                    }),
                 Card(
-                  elevation: 5.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        const Text("Categorías"),
-                        checkboxAlerta
-                      ],
-                    ),
-                  )
-                
-                ),
+                    elevation: 5.0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [const Text("Categorías"), checkboxAlerta],
+                      ),
+                    )),
                 const SizedBox(
                   height: 30,
                 ),
@@ -177,7 +177,11 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
                         );
                         await denunciaRepository.create(denuncia);
 
-                        await ShowDialog.showMyDialog(context, "Denuncia", "Denuncia realizada!");
+                        ShowDialog.showMyDialog(context, "Denuncia", "Denuncia realizada!")
+                        .then((value) => {
+                          Navigator.pushNamed(context, "historial")
+                        });
+                        
                     } else {
                       Widgets.alertSnackbar(context, "Imagen no seleccionada!");
                     }
@@ -209,17 +213,17 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
       String newName = "${uuid.v4()}$currentExtension";
       await denunciaRepository.uploadDataStorage([
         {
-          "name_img": newName,
+          "name_img": basename(image.getfile!.path),
           "path_img": image.getPath,
           "file": image.getfile,
         }
       ]);
-      urlDenuncias.add("${image.getPath}/$newName");
+      urlDenuncias.add("${image.getPath}/${basename(image.getfile!.path)}");
     }
-    
+
     Denuncia denuncia = Denuncia(
-      DateFormat('yMd').format(DateTime.now()),
-      DateFormat('hh: mm: ss aa').format(DateTime.now()),
+        DateFormat('yMd').format(DateTime.now()),
+        DateFormat('hh: mm: ss aa').format(DateTime.now()),
         _descripcionController!.value.text,
       latLng.latitude,
       latLng.longitude,
@@ -248,27 +252,20 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
                   margin: const EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.green),
-                      borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(30.0)),
                       image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: FileImage(
-                          selectedImages[index].getfile!
-                        )
-                      )
-                  ),
+                          fit: BoxFit.cover,
+                          image: FileImage(selectedImages[index].getfile!))),
                 ),
                 Positioned(
                   child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedImages.remove(selectedImages[index]);
-                      });
-                    },
-                    icon: const Icon(
-                      size: 50.0,
-                      Icons.close
-                    )
-                  ),
+                      onPressed: () {
+                        setState(() {
+                          selectedImages.remove(selectedImages[index]);
+                        });
+                      },
+                      icon: const Icon(size: 50.0, Icons.close)),
                 )
               ],
             );
@@ -344,14 +341,13 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
     try {
       var pickedImage = await picker.pickImage(source: ImageSource.camera);
       setState(() {
-        if(pickedImage == null) return;
+        if (pickedImage == null) return;
         var files = Files("denuncias");
-            files.setfile = File(pickedImage.path);
-            selectedImages.add(files);
-        });
+        files.setfile = File(pickedImage.path);
+        selectedImages.add(files);
+      });
     } on Exception {
       print("Error");
     }
   }
-
 }
