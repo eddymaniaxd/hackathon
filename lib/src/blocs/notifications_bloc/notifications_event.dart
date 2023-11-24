@@ -14,3 +14,8 @@ class NotificationReceived extends NotificationsEvent {
   final PushMessage pushMessage;
   NotificationReceived(this.pushMessage);
 }
+
+class TokensReceived extends NotificationsEvent {
+  final List<String> tokens;
+  TokensReceived(this.tokens);
+}

@@ -15,6 +15,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       _notificationStateChanded,
     );
     on<NotificationReceived>(_notificationReceived);
+    on<TokensReceived>(_tokensReceivedAllUsers);
     //verificador de permiso
     _initialStatusCheck();
 
@@ -35,6 +36,13 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       NotificationReceived event, Emitter<NotificationsState> emit) {
     emit(state
         .copyWith(notifications: [event.pushMessage, ...state.notifications]));
+  }
+
+  void _tokensReceivedAllUsers(
+      TokensReceived event, Emitter<NotificationsState> emit) {
+    emit(
+      state.copyWith(tokens: event.tokens),
+    );
   }
 
   void _getFCMToken() async {
