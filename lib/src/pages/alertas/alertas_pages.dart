@@ -17,19 +17,32 @@ class AlertasPage extends StatelessWidget {
         child: ListView.builder(
             itemCount: notifications.length,
             itemBuilder: (_, index) => Card(
+                  elevation: 8.0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
-                    side: BorderSide(
+                    side: const BorderSide(
                       color: Colors.black12,
                       width: 1.0,
                     ),
                   ),
-                  child: ListTile(
-                    onTap: () {},
-                    title: Text(notifications[index].title),
-                    subtitle: Text(notifications[index].body),
-                    leading: const Icon(Icons.notification_add),
-                    trailing: const Icon(Icons.arrow_forward_ios),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      title: Text(notifications[index].title),
+                      subtitle: Text(notifications[index].body),
+                      leading: const Icon(Icons.notification_add),
+                      trailing: IconButton(
+                        onPressed: () {
+                          print("ver más");
+                        },
+                        icon: const Icon(Icons.arrow_forward_ios),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide( width: 2 ),
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+
+                    ),
                   ),
                 )),
       ),
