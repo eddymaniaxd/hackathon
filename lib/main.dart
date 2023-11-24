@@ -9,9 +9,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
   runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(create: (_) => NotificationsBloc()),
-    ],
-    child: const MyApp(),
-  ));
+      providers: [
+        BlocProvider(lazy: false, create: (_) => NotificationsBloc()),
+      ],
+      child:
+        const MyApp()
+      ));
 }

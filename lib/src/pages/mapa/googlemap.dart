@@ -7,7 +7,7 @@ class MapaGoogle extends StatelessWidget {
   const MapaGoogle({super.key});
   @override
   Widget build(BuildContext context) {
-    
+  
     return ChangeNotifierProvider<MapController>(
         create: (_) => MapController(),
         child: Consumer<MapController>(
@@ -42,6 +42,7 @@ class MapaGoogle extends StatelessWidget {
                     onPressed: () {
                       //print(controller.locationSelected);
                       Navigator.pushNamed(context, "alerta_temprana", arguments: controller.locationSelected);
+                      //context.read<NotificationsBloc>().requestPermission();
                     },
                   ),
                 ],
