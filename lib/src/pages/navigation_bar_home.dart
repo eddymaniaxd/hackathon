@@ -36,10 +36,9 @@ class _NavigationAlertaState extends State<NavigationAlerta> {
   Widget build(BuildContext context) {
     return BlocConsumer<NotificationsBloc, NotificationsState>(
         listener: (context, state) {
-      if (state.hashCode != 0) {
-        //print('object');
-        //var mesage = state.notifications[state.notifications.length-1].title;
-        alertMessageReceived(context, 'mensaje');
+      if (state.hashCode != 0 && state.notifications.isNotEmpty) {
+        var message = state.notifications[state.notifications.length-1].title;
+        alertMessageReceived(context, message);
         //Widgets.alertSnackbar(context," mesage");
       }
     }, builder: (context, state) {
