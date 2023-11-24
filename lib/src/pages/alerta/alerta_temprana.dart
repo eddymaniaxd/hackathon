@@ -177,7 +177,11 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
                         );
                         await denunciaRepository.create(denuncia);
 
-                        await ShowDialog.showMyDialog(context, "Denuncia", "Denuncia realizada!");
+                        ShowDialog.showMyDialog(context, "Denuncia", "Denuncia realizada!")
+                        .then((value) => {
+                          Navigator.pushNamed(context, "historial")
+                        });
+                        
                     } else {
                       Widgets.alertSnackbar(context, "Imagen no seleccionada!");
                     }

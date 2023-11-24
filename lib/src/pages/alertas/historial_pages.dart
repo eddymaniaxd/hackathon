@@ -25,11 +25,25 @@ class HistorialPage extends StatelessWidget {
               var documento = documentos[index].data() as Map<String, dynamic>;
               print(documento);
               // Aquí puedes construir la interfaz de usuario con los datos del documento
-              return ListTile(
-                title: Text(documento['description']),
-                subtitle: Text(documento['description']),
-                // Agrega más widgets según sea necesario
-              );
+              return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      title: Text('Alerta de robo'),
+                      subtitle: Text(documento['description']),
+                      leading: const Icon(Icons.notification_add),
+                      trailing: IconButton(
+                        onPressed: () {
+                          print("ver más");
+                        },
+                        icon: const Icon(Icons.arrow_forward_ios),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide( width: 2 ),
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+
+                    ),
+                  );
             },
           );
         },
