@@ -13,8 +13,8 @@ class DenunciaRepository {
   List _allDatasDenuncia = [];
   List get allDatasDenuncia => _allDatasDenuncia;
 
-  Future<void> create(Map<String, dynamic> data) async {
-    await _denuncia.add(data);
+  Future<void> create(Denuncia denuncia) async {
+    await _denuncia.add(denuncia.toJson());
   }
 
   Future<void> createWithImage(Map<String, dynamic> data, String uid) async {

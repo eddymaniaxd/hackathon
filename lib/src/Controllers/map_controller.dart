@@ -9,7 +9,7 @@ class MapController extends ChangeNotifier {
   final Map<CircleId, Circle> _circles = {};
   late GoogleMapController _mapController;
   //late LatLng _currentPosition;
-  late LatLng _locationSelected;
+  late LatLng _locationSelected = const LatLng(0, 0);
 
   GoogleMapController get mapController => _mapController;
   Set<Marker> get markers => _markers.values.toSet();

@@ -13,7 +13,7 @@ import 'package:topicos_proy/src/pages/profile_screen.dart';
 import 'package:topicos_proy/src/widget/alert_dialog.dart';
 
 class Routes {
-  static const initialRoute = 'alerta_temprana';
+  static const initialRoute = 'map';
   static final Map<String, Widget Function(BuildContext)> routes = {
     'home': (BuildContext context) => HomePage(),
     'login': (BuildContext context) => Login(),
@@ -26,7 +26,6 @@ class Routes {
     'profile': (BuildContext context) => const ProfileScreen(),
     'lista_reclamos': (BuildContext context) => const ReclamoListView(),
     'alerta_temprana': (BuildContext context) => const AlertaTemprana(),
-    'category_notification': (BuildContext context) => const CheckboxAlerta(),
   };
   static final routesName = {
     'home': 'home',
