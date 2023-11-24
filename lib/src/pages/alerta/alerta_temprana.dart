@@ -145,7 +145,7 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
                   height: 30,
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate() &&
                         selectedImages.isNotEmpty) {
                         
