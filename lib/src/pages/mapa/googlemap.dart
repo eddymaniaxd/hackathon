@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:topicos_proy/src/Controllers/map_controller.dart';
+import 'package:topicos_proy/src/widget/widgets.dart';
 
 class MapaGoogle extends StatelessWidget {
   const MapaGoogle({super.key});
@@ -41,8 +42,12 @@ class MapaGoogle extends StatelessWidget {
                     child: const Icon(Icons.add_alert_sharp),
                     onPressed: () {
                       //print(controller.locationSelected);
-                      Navigator.pushNamed(context, "alerta_temprana", arguments: controller.locationSelected);
-                      //context.read<NotificationsBloc>().requestPermission();
+                      if(controller.locationSelected.latitude == 0 &&
+                        controller.locationSelected.longitude == 0){
+                        Widgets.alertSnackbar(context, "Seleccione una ubicación");
+                      }else{
+                        Navigator.pushNamed(context, "alerta_temprana", arguments: controller.locationSelected);
+                      }
                     },
                   ),
                 ],

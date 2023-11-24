@@ -1,62 +1,67 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CheckboxAlerta extends StatefulWidget {
-  const CheckboxAlerta({super.key});
+
+  late List<CategoryOption> categoryOptions;
+  List<CategoryOption> categorSelected = [];
+
+  
+
+   CheckboxAlerta({super.key, required this.categoryOptions});
 
   @override
   State<CheckboxAlerta> createState() => _CheckboxExampleState();
 }
 
 class _CheckboxExampleState extends State<CheckboxAlerta> {
-  bool? isCheckedPolicia = false;
-  bool? isCheckedBomberos = false;
-  bool? isCheckedTrancas = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.categoryOptions = [
+      CategoryOption(name: "Policia", state: false),
+      CategoryOption(name: "Bomberos", state: false),
+      CategoryOption(name: "Trancas", state: false),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Row(
-          children: [
-            Checkbox(
-              value: isCheckedPolicia,
-              onChanged: (bool? value) {
-                setState(() {
-                  isCheckedPolicia = value;
-                });
-              },
-            ),
-            const Text('Policia'),
-          ],
-        ),
-        Row(
-          children: [
-            Checkbox(
-              value: isCheckedBomberos,
-              onChanged: (bool? value) {
-                setState(() {
-                  isCheckedBomberos = value;
-                });
-              },
-            ),
-            const Text('Bomberos'),
-          ],
-        ),
-        Row(
-          children: [
-            Checkbox(
-              value: isCheckedTrancas,
-              onChanged: (bool? value) {
-                setState(() {
-                  isCheckedTrancas = value;
-                });
-              },
-            ),
-            const Text('Trancas'),
-          ],
-        ),
-      ],
+    return SizedBox(
+      height: 100,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: widget.categoryOptions.length,
+        itemBuilder: ((context, index) {
+          return Row(
+            children: [
+              Checkbox(
+                value: widget.categoryOptions[index].state,
+                onChanged: (value) {
+                  setState(() {
+                    widget.categoryOptions[index].state = value!;
+                    if(value){
+                      widget.categorSelected.add(widget.categoryOptions[index]);
+                    }else{
+                      widget.categorSelected.remove(widget.categoryOptions[index]);
+                    }
+                  });
+                },
+              ),
+              Text(widget.categoryOptions[index].name),
+            ],
+          );   
+        })
+      )
     );
   }
+}
+
+class CategoryOption {
+  String name;
+  bool state;
+
+  CategoryOption({required this.name, required this.state});
 }

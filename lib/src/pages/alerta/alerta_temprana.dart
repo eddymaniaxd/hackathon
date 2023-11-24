@@ -1,14 +1,17 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+import 'package:topicos_proy/src/models/denuncia.dart';
 import 'package:topicos_proy/src/repositories/denuncia_repository.dart';
 import 'package:topicos_proy/src/util/Files.dart';
 import 'package:topicos_proy/src/widget/alert_dialog.dart';
 import 'dart:io'; //MANEJO DE ARCHIVOS
 import 'dart:ui' as ui;
+import 'package:intl/intl.dart';
 
 import 'package:topicos_proy/src/widget/widgets.dart';
 
@@ -21,6 +24,7 @@ class AlertaTemprana extends StatefulWidget {
 
 class _AlertaTempranaState extends State<AlertaTemprana> {
   //VARIABLES DEFINIDAS
+
   List<File> _images = [];
 
   String _selectCategoria = "0";
@@ -36,10 +40,11 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
   DenunciaRepository denunciaRepository = DenunciaRepository();
   //Files files = Files("denuncias");
   List<Files> selectedImages = [];
+  CheckboxAlerta checkboxAlerta = CheckboxAlerta(categoryOptions: const [],);
 
   @override
   Widget build(BuildContext context) {
-    var locationSelected = ModalRoute.of(context)!.settings.arguments; //Recover location selected
+    LatLng locationSelected = ModalRoute.of(context)!.settings.arguments as LatLng; //Recover location selected
     print("Location: ${locationSelected}");
 
     return Scaffold(
@@ -54,7 +59,6 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
           child: Container(
             padding: const EdgeInsetsDirectional.all(20),
             child: ListView(
-              //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Seleccionar Fotografia:'),
                 const SizedBox(
@@ -119,14 +123,17 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
                   }
                 ),
                 Card(
-                  
-                  child: Row(
-                    children: const [
-                      Text("Categorías"),
-                      CheckboxAlerta()
-                    ],
+                  elevation: 5.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        const Text("Categorías"),
+                        checkboxAlerta
+                      ],
+                    ),
                   )
-
+                
                 ),
                 const SizedBox(
                   height: 30,
@@ -136,23 +143,11 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
                   height: 30,
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    //Navigator.pop(context, 'Cancel');
+                  onPressed: () async {
                     if (_formKey.currentState!.validate() &&
                         selectedImages.isNotEmpty) {
-                      print(_descripcionController!.value.text);
-                      for (var image in selectedImages) {
-                        print(basename(image.getfile!.path));
-                        print(image.getfile);
-                        print(image.getPath);
-                        // denunciaRepository.uploadDataStorage([
-                        //   {
-                        //     "name_img": basename(files.getfile!.path),
-                        //     "path_img": files.getPath,
-                        //     "file": files.getfile,
-                        //   }
-                        // ]);
-                      }
+                        await _uploadData(locationSelected);
+                        Widgets.alertSnackbar(context, "Denuncia realizada!");
                     } else {
                       Widgets.alertSnackbar(context, "Imagen no seleccionada!");
                     }
@@ -173,7 +168,43 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
         ));
   }
 
+  _uploadData(LatLng latLng) async {
+    List<String> urlDenuncias = [];
+
+    for (var image in selectedImages) {
+      String currentName = basename(image.getfile!.path);
+      String currentExt = extension(currentName);
+
+      DateTime now = DateTime.now();
+      String fechaHora = DateFormat('yyyyMMdd_HHmmss').format(now);
+      
+      String newName = "$fechaHora$currentExt";
+
+      await denunciaRepository.uploadDataStorage([
+        {
+          "name_img": newName,
+          "path_img": image.getPath,
+          "file": image.getfile,
+        }
+      ]);
+      urlDenuncias.add("${image.getPath}/$newName");
+    }
+    
+    Denuncia denuncia = Denuncia(
+      DateFormat('yMd').format(DateTime.now()),
+      DateFormat('hh: mm: ss aa').format(DateTime.now()),
+        _descripcionController!.value.text,
+      latLng.latitude,
+      latLng.longitude,
+      urlDenuncias
+    );
+    print(urlDenuncias);
+    print(denuncia.toJson());
+    await denunciaRepository.create(denuncia);
+  }
+
   _gallery() {
+    // ignore: unnecessary_null_comparison
     if (selectedImages == null || selectedImages.isEmpty) {
       return const Text("");
     }
@@ -184,14 +215,37 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
           scrollDirection: Axis.horizontal,
           itemCount: selectedImages.length,
           itemBuilder: (context, index) {
-            return Container(
-              padding: const EdgeInsets.all(10.0),
-              margin: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.green),
-                  borderRadius: const BorderRadius.all(Radius.circular(30.0))),
-              child:
-                  Image.file(selectedImages[index].getfile!, fit: BoxFit.cover),
+            return Stack(
+              children: [
+                Container(
+                  height: 350,
+                  width: 350,
+                  margin: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.green),
+                      borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: FileImage(
+                          selectedImages[index].getfile!
+                        )
+                      )
+                  ),
+                ),
+                Positioned(
+                  child: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        selectedImages.remove(selectedImages[index]);
+                      });
+                    },
+                    icon: const Icon(
+                      size: 50.0,
+                      Icons.close
+                    )
+                  ),
+                )
+              ],
             );
           }),
     );
