@@ -1,4 +1,5 @@
 import 'package:topicos_proy/src/pages/alerta/alerta_temprana.dart';
+import 'package:topicos_proy/src/pages/alertas/alert_details.dart';
 import 'package:topicos_proy/src/pages/alertas/alertas_pages.dart';
 import 'package:topicos_proy/src/pages/alertas/historial_pages.dart';
 import 'package:topicos_proy/src/pages/auth/camara.dart';
@@ -30,8 +31,8 @@ class Routes {
     'alerta_temprana': (BuildContext context) => const AlertaTemprana(),
     'navigation_home': (BuildContext content) => const NavigationBarHome(),
     'historial': (BuildContext content) => const HistorialPage(),
-    'notificaciones': (BuildContext content) => const AlertasPage(),
-    
+    'notificaciones': (BuildContext content) => AlertasPage(),
+    'alert_detail': (BuildContext content) => const AlertDetail(),
   };
   static final routesName = {
     'home': 'home',

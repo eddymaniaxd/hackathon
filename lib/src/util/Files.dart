@@ -40,9 +40,10 @@ class Files {
       
   }
 
-  static Future<String> loadImage(String path, String nameImage) async{
-
-      firebase_storage.Reference  ref = FirebaseStorage.instance.ref().child(path).child(nameImage);
+  static Future<String> loadImage(String imageUrl) async{
+      // String path, String nameImage
+      var pathAndNamed = imageUrl.split("/"); 
+      firebase_storage.Reference  ref = FirebaseStorage.instance.ref().child(pathAndNamed[0]).child(pathAndNamed[1]);
       
       //get image url from firebase storage
       var url = await ref.getDownloadURL();

@@ -33,7 +33,7 @@ class HistorialPage extends StatelessWidget {
                       leading: const Icon(Icons.notification_add),
                       trailing: IconButton(
                         onPressed: () {
-                          print("ver más");
+                          Navigator.pushNamed(context, "alert_detail", arguments: documento);
                         },
                         icon: const Icon(Icons.arrow_forward_ios),
                       ),

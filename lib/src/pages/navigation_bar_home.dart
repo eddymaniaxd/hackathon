@@ -72,7 +72,7 @@ class _NavigationAlertaState extends State<NavigationAlerta> {
         ),
         body: <Widget>[
           const MapaGoogle(),
-          const AlertasPage(),
+          AlertasPage(),
           const HistorialPage()
         ][currentPageIndex],
       );

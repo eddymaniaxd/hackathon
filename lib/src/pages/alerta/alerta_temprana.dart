@@ -173,8 +173,9 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
                             _descripcionController!.value.text,
                             locationSelected.latitude,
                             locationSelected.longitude,
-                          urlDenuncias
-                        );
+                            DateTime.now().toString(),
+                            urlDenuncias
+                          );
                         await denunciaRepository.create(denuncia);
 
                         ShowDialog.showMyDialog(context, "Denuncia", "Denuncia realizada!")
@@ -225,10 +226,11 @@ class _AlertaTempranaState extends State<AlertaTemprana> {
         DateFormat('yMd').format(DateTime.now()),
         DateFormat('hh: mm: ss aa').format(DateTime.now()),
         _descripcionController!.value.text,
-      latLng.latitude,
-      latLng.longitude,
-      urlDenuncias
-    );
+        latLng.latitude,
+        latLng.longitude,
+        DateTime.now().toString(),
+        urlDenuncias
+      );
     await denunciaRepository.create(denuncia);
   }
 

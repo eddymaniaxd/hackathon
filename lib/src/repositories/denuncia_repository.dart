@@ -22,6 +22,11 @@ class DenunciaRepository {
     await _denuncia.doc(uid).set(data);
   }
 
+  getLastElement() async {
+    QuerySnapshot querySnapshot = await _denuncia.orderBy("created_last", descending: true).limit(1).get();
+    return querySnapshot.docs[0];
+  }
+
   Future<List<Denuncia>> getAll() async {
     QuerySnapshot querySnapshot = await _denuncia.get();
     return _convertDocumentToModel(querySnapshot.docs);

@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:topicos_proy/src/blocs/notifications_bloc/notifications_bloc.dart';
+import 'package:topicos_proy/src/repositories/denuncia_repository.dart';
 
 class AlertasPage extends StatelessWidget {
-  const AlertasPage({super.key});
-
+  AlertasPage({super.key});
+  DenunciaRepository denunciaRepository = DenunciaRepository();
+  
   @override
   Widget build(BuildContext context) {
-    final notifications = context.watch<NotificationsBloc>().state.notifications;
+    //final notifications = context.watch<NotificationsBloc>().state.notifications;
+    dynamic notifications = [
+      {
+        "title": "Robo 1",
+        "body": "Description 1"
+      }
+    ];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notificaciones:'),
@@ -28,12 +36,13 @@ class AlertasPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      title: Text(notifications[index].title),
-                      subtitle: Text(notifications[index].body),
+                      title: Text(notifications[index]["title"]),
+                      subtitle: Text(notifications[index]["body"]),
                       leading: const Icon(Icons.notification_add),
                       trailing: IconButton(
-                        onPressed: () {
-                          print("ver más");
+                        onPressed: () async {
+                          var lastDoc = await denunciaRepository.getLastElement();
+                          Navigator.pushNamed(context, "alert_detail", arguments: lastDoc);
                         },
                         icon: const Icon(Icons.arrow_forward_ios),
                       ),
